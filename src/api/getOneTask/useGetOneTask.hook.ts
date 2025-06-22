@@ -6,9 +6,11 @@ export const useGetOneTask = (): ResponeOneTaskT => {
 	const [getOneTask, { data, loading, error }] = useLazyQuery(
 		_queries.getOneTask,
 	)
-	const fetchOneTask = (id: number) => {
+
+	const fetchOneTask = (id: number | undefined) => {
 		getOneTask({ variables: { id } })
 	}
+
 	return {
 		fetchOneTask,
 		oneTask: data?.oneTask,

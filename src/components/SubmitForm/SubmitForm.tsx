@@ -6,6 +6,7 @@ import { ApolloError } from '@apollo/client'
 import { CategoryT } from '../../types/category.types'
 import { AddTaskT, UpdateTaskT } from '../../types/createTask.types'
 import { ToDoT } from '../../types/todo.types'
+import { useStorage } from 'src/client/StorageContext'
 
 export type NewTaskForm = {
 	inputdatatime: {
@@ -43,18 +44,36 @@ const SubmitForm = memo(
 		setIdUpdate,
 		idUpdate,
 	}: SubmitFormProp) => {
+		const { storageType } = useStorage()
 		const [validate, setValidate] = useState<string>('')
 		const [valueTask, setValueTask] = useState<string>('')
 		const [valueTime, setValueTime] = useState<string>('')
+		const [valueIdUpdate, setValueIdUpdate] = useState<number>()
 		const [valueCategory, setValueCategory] = useState<number | ''>('')
 
 		useEffect(() => {
-			if (idUpdate) {
+			setValueIdUpdate(idUpdate)
+		}, [idUpdate])
+
+		useEffect(() => {
+			if (valueIdUpdate) {
 				setValueTask(taskForUpdate?.myTask ?? '')
 				setValueTime(taskForUpdate?.dueDate ?? '')
 				setValueCategory(taskForUpdate?.categoryId ?? '')
 			}
-		}, [taskForUpdate, idUpdate])
+		}, [taskForUpdate, valueIdUpdate])
+
+		useEffect(() => {
+			clear()
+		}, [storageType])
+
+		const clear = useCallback(() => {
+			setValueCategory('')
+			setValueTask('')
+			setValueTime('')
+			setIdUpdate(undefined)
+			setValueIdUpdate(undefined)
+		}, [])
 
 		const submit = useCallback(
 			(event: FormEvent) => {
@@ -109,16 +128,9 @@ const SubmitForm = memo(
 			[updateTaskById, errorUp, taskForUpdate],
 		)
 
-		const clear = useCallback(() => {
-			setValueCategory('')
-			setValueTask('')
-			setValueTime('')
-			setIdUpdate(undefined)
-		}, [])
-
 		return (
 			<Flex className="submitformwraper">
-				<form onSubmit={!taskForUpdate ? submit : update}>
+				<form onSubmit={!valueIdUpdate ? submit : update}>
 					<Flex gap={10} centerV spredV className="submitform">
 						<textarea
 							onChange={(e) => {
@@ -161,7 +173,7 @@ const SubmitForm = memo(
 										</option>
 									))}
 							</select>
-							{!idUpdate ? (
+							{!valueIdUpdate ? (
 								<Button
 									className="submitform__btn"
 									appearence="big"

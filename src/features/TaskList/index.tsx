@@ -9,6 +9,7 @@ interface TaskListProps {
 	setIsComplById: (id: number) => void
 	deleteTaskById: (id: number) => void
 	setIdUpdate: Dispatch<SetStateAction<number | undefined>>
+	fetchOneTask: (id: number | undefined) => void
 }
 
 const TaskList = ({
@@ -17,6 +18,7 @@ const TaskList = ({
 	setIsComplById,
 	deleteTaskById,
 	setIdUpdate,
+	fetchOneTask,
 }: TaskListProps) => {
 	return (
 		<div className="tasklistwrapper">
@@ -30,6 +32,7 @@ const TaskList = ({
 							key={i.id}
 							data={i}
 							setIdUpdate={setIdUpdate}
+							fetchOneTask={fetchOneTask}
 						/>
 					))}
 			</div>

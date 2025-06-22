@@ -24,6 +24,7 @@ interface AllTasksProps {
 	updateTask: ToDoT
 	storageType: StorageType
 	setIdUpdate: Dispatch<SetStateAction<number | undefined>>
+	fetchOneTask: (id: number | undefined) => void
 }
 
 const AllTasks = memo(
@@ -40,6 +41,7 @@ const AllTasks = memo(
 		setIdUpdate,
 		updateTask,
 		errorLayout,
+		fetchOneTask,
 	}: AllTasksProps) => {
 		useEffect(() => {
 			errorLayout ?? refetch()
@@ -54,6 +56,7 @@ const AllTasks = memo(
 				) : (
 					<Flex className="alltasks">
 						<TaskList
+							fetchOneTask={fetchOneTask}
 							deleteTaskById={deleteTaskById}
 							setIsComplById={setIsComplById}
 							label="Заплановані"
@@ -64,6 +67,7 @@ const AllTasks = memo(
 							setIdUpdate={setIdUpdate}
 						/>
 						<TaskList
+							fetchOneTask={fetchOneTask}
 							deleteTaskById={deleteTaskById}
 							setIsComplById={setIsComplById}
 							label="В роботі"
@@ -71,6 +75,7 @@ const AllTasks = memo(
 							setIdUpdate={setIdUpdate}
 						/>
 						<TaskList
+							fetchOneTask={fetchOneTask}
 							deleteTaskById={deleteTaskById}
 							setIsComplById={setIsComplById}
 							label="Архів"

@@ -1,5 +1,5 @@
 import './layout.sass'
-import { useEffect, useState } from 'react'
+import { memo, useState } from 'react'
 import { useStorage } from '../../client/StorageContext'
 import Flex from '../../components/Flex/Flex'
 import Header from '../../components/Header/Header'
@@ -8,7 +8,7 @@ import { Preloader } from '../../components/preloaders/PreloaderBall'
 import { useToDoApp } from './useToDoApp'
 import AllTasks from 'src/components/AllTasks/AllTasks'
 
-const Layout = () => {
+const Layout = memo(() => {
 	const { storageType } = useStorage()
 	const [idUpdate, setIdUpdate] = useState<number>()
 	const {
@@ -36,10 +36,6 @@ const Layout = () => {
 		errorAdd,
 		errorUp,
 	} = useToDoApp()
-
-	useEffect(() => {
-		idUpdate && fetchOneTask(idUpdate)
-	}, [idUpdate])
 
 	return (
 		<Flex className="layout" column>
@@ -80,9 +76,10 @@ const Layout = () => {
 				addTask={addTask}
 				updateTask={updateTask}
 				setIdUpdate={setIdUpdate}
+				fetchOneTask={fetchOneTask}
 			/>
 		</Flex>
 	)
-}
+})
 
 export default Layout

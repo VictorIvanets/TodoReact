@@ -11,6 +11,7 @@ interface TaskCardProps {
 	setIsComplite: () => void
 	deleteTask: () => void
 	setIdUpdate: Dispatch<SetStateAction<number | undefined>>
+	fetchOneTask: (id: number | undefined) => void
 }
 
 const TaskCard = ({
@@ -18,6 +19,7 @@ const TaskCard = ({
 	setIsComplite,
 	deleteTask,
 	setIdUpdate,
+	fetchOneTask,
 }: TaskCardProps) => {
 	const dateIso = new Date(data.dueDate)
 
@@ -36,7 +38,10 @@ const TaskCard = ({
 						className="taskcard__bthupdate"
 						appearence="small"
 						title="UPDATE"
-						onClick={() => setIdUpdate(data.id)}
+						onClick={() => {
+							setIdUpdate(data.id)
+							fetchOneTask(data.id)
+						}}
 					/>
 					<Button
 						className="taskcard__delete"

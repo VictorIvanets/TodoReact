@@ -2,8 +2,8 @@ import { ApolloError } from '@apollo/client'
 import { ToDoT } from '../../types/todo.types'
 
 export type ResponeOneTaskT = {
-	fetchOneTask: (id: number) => void
+	fetchOneTask: (id: number | undefined) => void
 	loadingOne: boolean
 	errorOne: ApolloError | undefined
-	oneTask: ToDoT
+	oneTask: ToDoT | undefined
 }

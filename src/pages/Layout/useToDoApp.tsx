@@ -9,14 +9,13 @@ import { useEffect, useState } from 'react'
 
 export const useToDoApp = () => {
 	const [errorLayout, setErrorLayout] = useState<string>()
-
 	const { loadingCat, errorCat, allCategory } = getAllCategory()
 	const { addNewTask, errorAdd, addTask, loadingAdd } = useAddNewTask()
 	const { loading, error, allTask, refetch } = getAllTasks()
 	const { setIsComplById, setIsCompleted, loadingSet, errorSet } =
 		useSetIsComplited()
 	const { deleteTaskById, deleteTask, loadingDel, errorDel } = useDeleteTask()
-	const { fetchOneTask, oneTask, loadingOne, errorOne } = useGetOneTask()
+	const { fetchOneTask, oneTask, loadingOne } = useGetOneTask()
 	const { updateTaskById, loadingUp, errorUp, updateTask } = useUpdateTask()
 
 	useEffect(() => {
@@ -25,9 +24,8 @@ export const useToDoApp = () => {
 		errorAdd && setErrorLayout(errorAdd.message)
 		errorSet && setErrorLayout(errorSet.message)
 		errorDel && setErrorLayout(errorDel.message)
-		errorOne && setErrorLayout(errorOne.message)
 		errorUp && setErrorLayout(errorUp.message)
-	}, [errorCat, errorAdd, error, errorSet, errorDel, errorOne, errorUp])
+	}, [errorCat, errorAdd, error, errorSet, errorDel, errorUp])
 
 	return {
 		loadingCat,
