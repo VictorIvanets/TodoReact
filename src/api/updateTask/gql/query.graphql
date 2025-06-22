@@ -1,0 +1,11 @@
+mutation UpDate($UpdateTask: UpdateTask!) {
+	updateTask(task: $UpdateTask) {
+		id
+		myTask
+		dueDate
+		dueTimeSpan
+		categoryId
+		categoryName
+		isCompleted
+	}
+}

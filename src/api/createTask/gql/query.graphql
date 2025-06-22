@@ -1,0 +1,14 @@
+mutation AddTask($AddTask: AddTask!) {
+	addTask(addTask: $AddTask) {
+		id
+		myTask
+		categoryName
+		dueDate
+	}
+}
+
+# input AddTask {
+# 	task: String!
+# 	dateTime: String!
+# 	categoryId: Int!
+# }

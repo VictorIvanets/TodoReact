@@ -1,0 +1,74 @@
+@use '../../sass/main_style' as *
+
+.submitformwraper
+    width: 50%
+    @media (max-width: 700px)
+        width: 100%
+    form
+        width: 100%
+
+.submitform
+    padding: 0.5rem 1rem
+    position: relative
+
+    &__select
+        text-align: center
+        width: 100%
+        height: 3rem
+        border: none
+        outline: none
+        background: $COLORSECONDTR
+        border-radius: 0.3rem
+        font-size: 1.2rem
+        transition: all 0.2s
+        &:hover
+            transition: all 0.2s
+            background: $COLORWHITE
+    &__btn
+        width: 100%
+        background: $COLORSECONDTR
+        *
+            margin: 0
+            font-size: 1.2rem
+            transition: all 0.2s
+            &:hover
+                transition: all 0.2s
+                background: $COLORWHITE
+    &__textarea
+        resize: none
+        outline: none
+        width: 100%
+        min-height: 10rem
+        border-radius: 0.5rem
+        font-size: 1.5rem
+        padding: 5px
+        background: $COLORSECONDTR
+    @media (max-width: 720px) 
+        flex-direction: column
+
+
+.inputdatatime 
+    outline: none
+    width: 100%
+    height: 3rem
+    border: none
+    border-radius: 0.3rem
+    background: $COLORSECONDTR
+    margin: 0
+    font-size: 1.2rem
+    transition: all 0.2s
+    &:hover
+        transition: all 0.2s
+        background: $COLORWHITE
+.validate
+    background: $COLORRED
+    padding: 1rem
+    border-radius: 0.5rem
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    position: absolute
+    cursor: pointer
+    p
+        color: $COLORWHITE
+

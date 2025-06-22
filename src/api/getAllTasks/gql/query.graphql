@@ -1,0 +1,11 @@
+query getAllTasks {
+	allTask {
+		id
+		myTask
+		dueDate
+		dueTimeSpan
+		categoryId
+		categoryName
+		isCompleted
+	}
+}

@@ -1,0 +1,42 @@
+@use '../../sass/main_style' as *
+
+.taskcard 
+    min-height: 10rem
+    width: 100%
+    background: $COLORSECONDTR
+    margin-bottom: 1.4rem
+    border-radius: 0.3rem
+    overflow: hidden
+    padding: 0
+    box-shadow: 3px 3px 3px black
+    &__header
+        padding: 0.5rem
+        background: $COLORTEXT
+        *           
+            color: white
+    &__content
+        padding: 0.5rem
+    &__bthupdate
+        transition: all 0.2s
+        &:hover
+            background: $COLORGREEN
+            transition: all 0.2s
+    &__delete
+        transition: all 0.2s
+        &:hover
+            background: $COLORRED
+            transition: all 0.2s
+    &__checkbox
+        background: none
+        outline: none
+        border: none
+        transition: all 0.2s
+        display: inline
+        &:hover
+            p
+                scale: 120%
+                color: yellow
+                transition: all 0.2s
+
+
+            

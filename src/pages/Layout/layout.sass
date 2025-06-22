@@ -1,0 +1,35 @@
+@use '../../sass/main_style' as *
+
+.layout
+    position: relative
+    &__head
+        height: 11rem
+        width: 100%
+        border-bottom: 0.2rem solid $COLORSECONDTR
+        @media (max-width: 720px) 
+            height: 100%
+            flex-direction: column
+    &__loader
+        width: 50%
+        height: 100%
+        @media (max-width: 720px) 
+            width: 100%
+            height: 25rem
+        position: absolute
+        top: 50%
+        left: 50%
+        transform: translate(-50%, -50%)
+        width: 80%
+        height: 80%
+    &__error
+        position: absolute
+        top: 50%
+        left: 50%
+        transform: translate(-50%, -50%)
+        min-width: 28rem
+        min-height: 10rem
+        background: $COLORRED
+        border-radius: 0.5rem
+        opacity: 0.9
+        *
+            color: $COLORWHITE
