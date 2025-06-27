@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import Button from '../../components/Button/Button'
 import Flex from '../../components/Flex/Flex'
 import { themeColor } from '../../sass/themeColor'
@@ -23,6 +23,8 @@ const TaskCard = ({
 }: TaskCardProps) => {
 	const dateIso = new Date(data.dueDate)
 
+	const [checkDel, setCheckDel] = useState<boolean>(false)
+
 	const { date, featureBool } = getTimeSpan(data.dueDate)
 	return (
 		<Flex
@@ -31,6 +33,25 @@ const TaskCard = ({
 			spredV
 			className="taskcard"
 		>
+			{checkDel && (
+				<Flex center gap={20} className="taskcard__checkdel">
+					<Button
+						className="taskcard__btndelbox"
+						appearence="small"
+						title="cencel"
+						onClick={() => setCheckDel(false)}
+					/>
+					<Button
+						className="taskcard__btndelbox"
+						appearence="small"
+						title="delete"
+						onClick={() => {
+							deleteTask()
+							setCheckDel(false)
+						}}
+					/>
+				</Flex>
+			)}
 			<Flex centerV spredV className="taskcard__header">
 				<h4>{data.categoryName}</h4>
 				<Flex gap={5}>
@@ -47,7 +68,7 @@ const TaskCard = ({
 						className="taskcard__delete"
 						appearence="small"
 						title="DELETE"
-						onClick={() => deleteTask()}
+						onClick={() => setCheckDel(true)}
 					/>
 
 					<Flex>

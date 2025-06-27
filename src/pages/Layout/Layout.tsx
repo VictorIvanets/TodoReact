@@ -37,6 +37,8 @@ const Layout = memo(() => {
 		errorUp,
 	} = useToDoApp()
 
+	console.log(idUpdate)
+
 	return (
 		<Flex className="layout" column>
 			{errorLayout && (
@@ -63,21 +65,24 @@ const Layout = memo(() => {
 					idUpdate={idUpdate}
 				/>
 			</Flex>
-			<AllTasks
-				errorLayout={errorLayout}
-				storageType={storageType}
-				loading={loading}
-				allTask={allTask || []}
-				refetch={refetch}
-				setIsComplById={setIsComplById}
-				setIsCompleted={setIsCompleted}
-				deleteTaskById={deleteTaskById}
-				deleteTask={deleteTask}
-				addTask={addTask}
-				updateTask={updateTask}
-				setIdUpdate={setIdUpdate}
-				fetchOneTask={fetchOneTask}
-			/>
+			<Flex className="layout__taskwrapper">
+				{idUpdate && <Flex className="layout__taskwrapper__blur"></Flex>}
+				<AllTasks
+					errorLayout={errorLayout}
+					storageType={storageType}
+					loading={loading}
+					allTask={allTask || []}
+					refetch={refetch}
+					setIsComplById={setIsComplById}
+					setIsCompleted={setIsCompleted}
+					deleteTaskById={deleteTaskById}
+					deleteTask={deleteTask}
+					addTask={addTask}
+					updateTask={updateTask}
+					setIdUpdate={setIdUpdate}
+					fetchOneTask={fetchOneTask}
+				/>
+			</Flex>
 		</Flex>
 	)
 })

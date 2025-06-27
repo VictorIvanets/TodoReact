@@ -1,6 +1,7 @@
 @use '../../sass/main_style' as *
 
 .taskcard 
+    position: relative
     min-height: 10rem
     width: 100%
     background: $COLORSECONDTR
@@ -9,6 +10,18 @@
     overflow: hidden
     padding: 0
     box-shadow: 3px 3px 3px black
+    &__checkdel
+        position: absolute
+        top: 50%
+        left: 50%
+        transform: translate(-50%, -50%)
+        backdrop-filter: blur(10px)
+        width: 100%,
+        height: 100%
+        border-radius: 0.3rem
+        overflow: hidden
+        animation: blur 0.3s linear 0s
+
     &__header
         padding: 0.5rem
         background: $COLORTEXT
@@ -37,6 +50,23 @@
                 scale: 120%
                 color: yellow
                 transition: all 0.2s
+    &__btndelbox
+        width: auto
+        height: auto
+        border-radius: 0.2rem
+        transition: all 0.2s
+        @include flexcenter
+        padding: 0.5rem
+        &:hover
+            background: $COLORRED
+            transition: all 0.2s
+        p
+            color: $COLORWHITE
 
+@keyframes blur 
+        0%
+            backdrop-filter: blur(0px)
+        100%
+            backdrop-filter: blur(10px)
 
             
