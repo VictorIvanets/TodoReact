@@ -22,10 +22,9 @@ const TaskCard = ({
 	fetchOneTask,
 }: TaskCardProps) => {
 	const dateIso = new Date(data.dueDate)
-
 	const [checkDel, setCheckDel] = useState<boolean>(false)
-
 	const { date, featureBool } = getTimeSpan(data.dueDate)
+
 	return (
 		<Flex
 			style={{ opacity: data.isCompleted ? 0.3 : undefined }}

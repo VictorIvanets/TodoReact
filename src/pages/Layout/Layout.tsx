@@ -37,8 +37,6 @@ const Layout = memo(() => {
 		errorUp,
 	} = useToDoApp()
 
-	console.log(idUpdate)
-
 	return (
 		<Flex className="layout" column>
 			{errorLayout && (
