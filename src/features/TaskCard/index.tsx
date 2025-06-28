@@ -1,29 +1,24 @@
-import { Dispatch, SetStateAction, useState } from 'react'
+import { useState } from 'react'
 import Button from '../../components/Button/Button'
 import Flex from '../../components/Flex/Flex'
 import { themeColor } from '../../sass/themeColor'
 import { ToDoT } from '../../types/todo.types'
 import { getTimeSpan } from './getTimeSpan'
 import './taskcard.sass'
+import { useDispatch } from 'react-redux'
+import { alltaskActions } from 'src/slices/taskSlice'
+import { categoryMock } from 'src/components/SubmitForm/components/allcategoryMock'
 
 interface TaskCardProps {
 	data: ToDoT
-	setIsComplite: () => void
-	deleteTask: () => void
-	setIdUpdate: Dispatch<SetStateAction<number | undefined>>
-	fetchOneTask: (id: number | undefined) => void
 }
 
-const TaskCard = ({
-	data,
-	setIsComplite,
-	deleteTask,
-	setIdUpdate,
-	fetchOneTask,
-}: TaskCardProps) => {
+const TaskCard = ({ data }: TaskCardProps) => {
 	const dateIso = new Date(data.dueDate)
 	const [checkDel, setCheckDel] = useState<boolean>(false)
 	const { date, featureBool } = getTimeSpan(data.dueDate)
+	const categoryName = categoryMock.find((i) => i.id === data.categoryId)
+	const dispatch = useDispatch()
 
 	return (
 		<Flex
@@ -45,22 +40,21 @@ const TaskCard = ({
 						appearence="small"
 						title="delete"
 						onClick={() => {
-							deleteTask()
+							dispatch(alltaskActions.deleteTaskById(data.id))
 							setCheckDel(false)
 						}}
 					/>
 				</Flex>
 			)}
 			<Flex centerV spredV className="taskcard__header">
-				<h4>{data.categoryName}</h4>
+				<h4>{categoryName?.categoryName}</h4>
 				<Flex gap={5}>
 					<Button
 						className="taskcard__bthupdate"
 						appearence="small"
 						title="UPDATE"
 						onClick={() => {
-							setIdUpdate(data.id)
-							fetchOneTask(data.id)
+							dispatch(alltaskActions.getTaskForUpdateById(data.id))
 						}}
 					/>
 					<Button
@@ -72,7 +66,7 @@ const TaskCard = ({
 
 					<Flex>
 						<button
-							onClick={() => setIsComplite()}
+							onClick={() => dispatch(alltaskActions.setIsComplById(data.id))}
 							className="taskcard__checkbox"
 							title="set completed"
 						>

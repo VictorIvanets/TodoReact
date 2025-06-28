@@ -1,4 +1,4 @@
-import { useStorage } from '../../client/StorageContext'
+import { useStorage } from '../../context/StorageContext'
 import { EventSelectStorage } from '../../types/storage.types'
 import './selectstorage.sass'
 

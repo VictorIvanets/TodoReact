@@ -9,3 +9,15 @@ export type UpdateTaskT = {
 	dateTime: string
 	categoryId: number
 }
+
+export type NewTaskFormT = {
+	inputdatatime: {
+		value: string
+	}
+	textarea: {
+		value: string
+	}
+	select: {
+		value: string
+	}
+}

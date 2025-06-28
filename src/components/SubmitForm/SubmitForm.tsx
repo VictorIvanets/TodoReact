@@ -2,210 +2,152 @@ import { FormEvent, memo, useCallback, useEffect, useState } from 'react'
 import Button from '../Button/Button'
 import Flex from '../Flex/Flex'
 import './submitform.sass'
-import { ApolloError } from '@apollo/client'
-import { CategoryT } from '../../types/category.types'
-import { AddTaskT, UpdateTaskT } from '../../types/createTask.types'
-import { ToDoT } from '../../types/todo.types'
-import { useStorage } from 'src/client/StorageContext'
+import { NewTaskFormT } from '../../types/createTask.types'
+import { useStorage } from 'src/context/StorageContext'
+import SelectCategory from './components/SelectCategory'
+import { useDispatch, useSelector } from 'react-redux'
+import { alltaskActions } from 'src/slices/taskSlice'
+import { RootState } from 'src/store/store'
 
-export type NewTaskForm = {
-	inputdatatime: {
-		value: string
-	}
-	textarea: {
-		value: string
-	}
-	select: {
-		value: string
-	}
-}
+const SubmitForm = memo(() => {
+	const { storageType } = useStorage()
+	const [validate, setValidate] = useState<string>('')
+	const [valueTask, setValueTask] = useState<string>('')
+	const [valueTime, setValueTime] = useState<string>('')
+	const [valueCategory, setValueCategory] = useState<number | ''>('')
+	const dispatch = useDispatch()
+	const { taskForUpdate } = useSelector((state: RootState) => state.alltask)
 
-interface SubmitFormProp {
-	loadingCat: boolean
-	allCategory: CategoryT[]
-	addNewTask: (addTask: AddTaskT) => void
-	updateTaskById: (updateTask: UpdateTaskT) => void
-	errorAdd: ApolloError | undefined
-	errorUp: ApolloError | undefined
-	taskForUpdate: ToDoT | undefined
-	setIdUpdate: React.Dispatch<React.SetStateAction<number | undefined>>
-	idUpdate: number | undefined
-}
+	useEffect(() => {
+		if (taskForUpdate) {
+			setValueTask(taskForUpdate?.myTask ?? '')
+			setValueTime(taskForUpdate?.dueDate ?? '')
+			setValueCategory(taskForUpdate?.categoryId ?? '')
+		}
+	}, [taskForUpdate])
 
-const SubmitForm = memo(
-	({
-		loadingCat,
-		allCategory,
-		addNewTask,
-		errorAdd,
-		taskForUpdate,
-		updateTaskById,
-		errorUp,
-		setIdUpdate,
-		idUpdate,
-	}: SubmitFormProp) => {
-		const { storageType } = useStorage()
-		const [validate, setValidate] = useState<string>('')
-		const [valueTask, setValueTask] = useState<string>('')
-		const [valueTime, setValueTime] = useState<string>('')
-		const [valueIdUpdate, setValueIdUpdate] = useState<number>()
-		const [valueCategory, setValueCategory] = useState<number | ''>('')
+	useEffect(() => {
+		console.log('storageType', storageType)
+		clear()
+	}, [storageType])
 
-		useEffect(() => {
-			setValueIdUpdate(idUpdate)
-		}, [idUpdate])
+	const clear = useCallback(() => {
+		dispatch(alltaskActions.getTaskForUpdateById(null))
+		setValueCategory('')
+		setValueTask('')
+		setValueTime('')
+	}, [])
 
-		useEffect(() => {
-			if (valueIdUpdate) {
-				setValueTask(taskForUpdate?.myTask ?? '')
-				setValueTime(taskForUpdate?.dueDate ?? '')
-				setValueCategory(taskForUpdate?.categoryId ?? '')
+	const submit = useCallback(
+		(event: FormEvent) => {
+			const target = event.target as typeof event.target & NewTaskFormT
+			event.preventDefault()
+			const { inputdatatime, textarea, select } = target
+			if (textarea.value === '') setValidate('заповніть поле для задачі')
+			else if (inputdatatime.value === '') setValidate('оберіть дату')
+			else if (select.value === '') setValidate('оберіть категорію')
+			else {
+				dispatch(
+					alltaskActions.addTask({
+						id: Math.floor(Math.random() * 1000000),
+						myTask: textarea.value,
+						dueDate: inputdatatime.value,
+						categoryId: +select.value,
+						isCompleted: false,
+					}),
+				)
+				clear()
 			}
-		}, [taskForUpdate, valueIdUpdate])
+		},
+		[dispatch, clear],
+	)
 
-		useEffect(() => {
-			clear()
-		}, [storageType])
-
-		const clear = useCallback(() => {
-			setValueCategory('')
-			setValueTask('')
-			setValueTime('')
-			setIdUpdate(undefined)
-			setValueIdUpdate(undefined)
-		}, [])
-
-		const submit = useCallback(
-			(event: FormEvent) => {
-				const target = event.target as typeof event.target & NewTaskForm
-				event.preventDefault()
-				const { inputdatatime, textarea, select } = target
-				if (textarea.value === '') setValidate('заповніть поле для задачі')
-				else if (inputdatatime.value === '') setValidate('оберіть дату')
-				else if (select.value === '') setValidate('оберіть категорію')
-				else {
-					addNewTask({
-						task: textarea.value,
-						dateTime: inputdatatime.value,
+	const update = useCallback(
+		(event: FormEvent) => {
+			const target = event.target as typeof event.target & NewTaskFormT
+			event.preventDefault()
+			const { inputdatatime, textarea, select } = target
+			if (textarea.value === '') setValidate('заповніть поле для задачі')
+			else if (inputdatatime.value === '') setValidate('оберіть дату')
+			else if (select.value === '') setValidate('оберіть категорію')
+			else if (taskForUpdate) {
+				dispatch(
+					alltaskActions.updateTaskById({
+						id: taskForUpdate.id,
+						myTask: textarea.value,
+						dueDate: inputdatatime.value,
 						categoryId: +select.value,
-					})
-					if (errorAdd) setValidate(errorAdd.message)
-					else {
-						setValueCategory('')
-						setValueTask('')
-						setValueTime('')
-					}
-				}
-			},
-			[addNewTask, errorAdd],
-		)
+						isCompleted: false,
+					}),
+				)
+				clear()
+			}
+			return
+		},
+		[taskForUpdate, dispatch, clear],
+	)
 
-		const update = useCallback(
-			(event: FormEvent) => {
-				const target = event.target as typeof event.target & NewTaskForm
-				event.preventDefault()
-				const { inputdatatime, textarea, select } = target
-				if (textarea.value === '') setValidate('заповніть поле для задачі')
-				else if (inputdatatime.value === '') setValidate('оберіть дату')
-				else if (select.value === '') setValidate('оберіть категорію')
-				else if (taskForUpdate) {
-					updateTaskById({
-						id: taskForUpdate?.id,
-						task: textarea.value,
-						dateTime: inputdatatime.value,
-						categoryId: +select.value,
-					})
-					if (errorUp) setValidate(errorUp.message)
-					else {
-						setValueCategory('')
-						setValueTask('')
-						setValueTime('')
-						setIdUpdate(undefined)
-					}
-				}
-				return
-			},
-			[updateTaskById, errorUp, taskForUpdate],
-		)
-
-		return (
-			<Flex className="submitformwraper">
-				<form onSubmit={!valueIdUpdate ? submit : update}>
-					<Flex gap={10} centerV spredV className="submitform">
-						<textarea
+	return (
+		<Flex className="submitformwraper">
+			<form onSubmit={!taskForUpdate ? submit : update}>
+				<Flex gap={10} centerV spredV className="submitform">
+					<textarea
+						onChange={(e) => {
+							setValidate('')
+							setValueTask(e.target.value)
+						}}
+						name="textarea"
+						className="submitform__textarea"
+						value={valueTask}
+					></textarea>
+					<Flex gap={5} column>
+						<input
 							onChange={(e) => {
 								setValidate('')
-								setValueTask(e.target.value)
+								setValueTime(e.target.value)
 							}}
-							name="textarea"
-							className="submitform__textarea"
-							value={valueTask}
-						></textarea>
-						<Flex gap={5} column>
-							<input
-								onChange={(e) => {
-									setValidate('')
-									setValueTime(e.target.value)
-								}}
-								name="inputdatatime"
-								className="inputdatatime"
-								type="datetime-local"
-								value={valueTime}
+							name="inputdatatime"
+							className="inputdatatime"
+							type="datetime-local"
+							value={valueTime}
+						/>
+						<SelectCategory
+							setValidate={setValidate}
+							setValueCategory={setValueCategory}
+							valueCategory={valueCategory}
+						/>
+						{!taskForUpdate ? (
+							<Button
+								className="submitform__btn"
+								appearence="big"
+								title={'Submit'}
 							/>
-							<select
-								onChange={(e) => {
-									setValidate('')
-									setValueCategory(+e.target.value)
-								}}
-								name="select"
-								className="submitform__select"
-								id="category-select"
-								value={valueCategory}
-							>
-								<option disabled value="">
-									{loadingCat ? 'loading...' : '--select category--'}
-								</option>
-
-								{allCategory &&
-									allCategory.map((i) => (
-										<option key={i.id} value={i.id}>
-											{i.categoryName}
-										</option>
-									))}
-							</select>
-							{!valueIdUpdate ? (
+						) : (
+							<Flex gap={3}>
 								<Button
 									className="submitform__btn"
 									appearence="big"
-									title={'Submit'}
+									title={'Update'}
 								/>
-							) : (
-								<Flex gap={3}>
-									<Button
-										className="submitform__btn"
-										appearence="big"
-										title={'Update'}
-									/>
-									<Button
-										type="button"
-										className="submitform__btn"
-										appearence="big"
-										title={'cancel'}
-										onClick={() => clear()}
-									/>
-								</Flex>
-							)}
-						</Flex>
-						{validate && (
-							<Flex onClick={() => setValidate('')} className="validate">
-								<p>{validate}</p>
+								<Button
+									type="button"
+									className="submitform__btn"
+									appearence="big"
+									title={'cancel'}
+									onClick={() => clear()}
+								/>
 							</Flex>
 						)}
 					</Flex>
-				</form>
-			</Flex>
-		)
-	},
-)
+					{validate && (
+						<Flex onClick={() => setValidate('')} className="validate">
+							<p>{validate}</p>
+						</Flex>
+					)}
+				</Flex>
+			</form>
+		</Flex>
+	)
+})
 
 export default SubmitForm
