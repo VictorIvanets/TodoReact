@@ -50,7 +50,6 @@ const Layout = memo(() => {
 				</Flex>
 			)}
 			<Flex className="layout__head" gap={20}>
-				<Header />
 				<SubmitForm
 					loadingCat={loadingCat}
 					allCategory={allCategory || []}
@@ -62,6 +61,7 @@ const Layout = memo(() => {
 					setIdUpdate={setIdUpdate}
 					idUpdate={idUpdate}
 				/>
+				<Header />
 			</Flex>
 			<Flex className="layout__taskwrapper">
 				{idUpdate && <Flex className="layout__taskwrapper__blur"></Flex>}
