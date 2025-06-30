@@ -1,18 +1,32 @@
 import './alltasks.sass'
-import { memo } from 'react'
+import { memo, useEffect } from 'react'
 import { Preloader } from '../preloaders/PreloaderBall'
 import TaskList from '../../features/TaskList'
 import { checkFuture } from '../../features/TaskCard/getTimeSpan'
 import Flex from '../Flex/Flex'
 import { helperNowTask } from './helperTask'
-import { useSelector } from 'react-redux'
-import { RootState } from 'src/store/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState, AppDispatch } from 'src/store/store'
+import { useStorage } from 'src/context/StorageContext'
+import { getAllTask } from 'src/store/thunks/getAllTaskThunk'
 
 const AllTasks = memo(() => {
-	const { alltask, loading } = useSelector((state: RootState) => state.alltask)
+	const {
+		alltask,
+		loading,
+		errorMessege: errorMassege,
+	} = useSelector((state: RootState) => state.alltask)
+	const { storageType } = useStorage()
+
+	const dispatch = useDispatch<AppDispatch>()
+	useEffect(() => {
+		dispatch(getAllTask())
+	}, [dispatch, storageType])
 
 	return (
 		<>
+			{errorMassege && <h1>{errorMassege}</h1>}
+
 			{loading ? (
 				<Flex className="alltasks">
 					<Preloader />

@@ -1,0 +1,8 @@
+mutation AddTask($AddTask: AddTask!) {
+	addTask(addTask: $AddTask) {
+		id
+		myTask
+		categoryName
+		dueDate
+	}
+}

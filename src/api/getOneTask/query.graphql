@@ -1,0 +1,11 @@
+query GetOneTask($id: ID!) {
+	oneTask(id: $id) {
+		id
+		myTask
+		dueDate
+		dueTimeSpan
+		categoryId
+		categoryName
+		isCompleted
+	}
+}

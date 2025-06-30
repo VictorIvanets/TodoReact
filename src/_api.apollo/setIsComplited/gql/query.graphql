@@ -1,3 +1,0 @@
-mutation steIsComplited($id: ID!) {
-	setIsCompleted(id: $id)
-}

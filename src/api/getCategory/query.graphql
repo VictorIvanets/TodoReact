@@ -1,0 +1,6 @@
+query GetAllCategory {
+	allCategory {
+		id
+		categoryName
+	}
+}

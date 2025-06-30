@@ -1,5 +1,9 @@
+import { useStorage } from 'src/context/StorageContext'
 import '../submitform.sass'
-import { categoryMock } from './allcategoryMock'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'src/store/store'
+import { useEffect } from 'react'
+import { getCategoryThunk } from 'src/store/thunks/getCategoryThunk'
 interface SelectCategoryProps {
 	setValidate: React.Dispatch<React.SetStateAction<string>>
 	setValueCategory: React.Dispatch<React.SetStateAction<number | ''>>
@@ -10,8 +14,17 @@ const SelectCategory = ({
 	setValidate,
 	setValueCategory,
 	valueCategory,
-	loadingCat = false,
 }: SelectCategoryProps) => {
+	const { allCategory, loading, errorMessege } = useSelector(
+		(state: RootState) => state.category,
+	)
+	const { storageType } = useStorage()
+
+	const dispatch = useDispatch<AppDispatch>()
+	useEffect(() => {
+		dispatch(getCategoryThunk())
+	}, [dispatch, storageType])
+
 	return (
 		<select
 			onChange={(e) => {
@@ -24,11 +37,15 @@ const SelectCategory = ({
 			value={valueCategory}
 		>
 			<option disabled value="">
-				{loadingCat ? 'loading...' : '--select category--'}
+				{loading
+					? 'loading...'
+					: errorMessege
+					? errorMessege
+					: '--select category--'}
 			</option>
 
-			{categoryMock &&
-				categoryMock.map((i) => (
+			{allCategory &&
+				allCategory.map((i) => (
 					<option key={i.id} value={i.id}>
 						{i.categoryName}
 					</option>

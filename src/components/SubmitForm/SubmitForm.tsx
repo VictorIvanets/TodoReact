@@ -6,8 +6,10 @@ import { NewTaskFormT } from '../../types/createTask.types'
 import { useStorage } from 'src/context/StorageContext'
 import SelectCategory from './components/SelectCategory'
 import { useDispatch, useSelector } from 'react-redux'
-import { alltaskActions } from 'src/slices/taskSlice'
-import { RootState } from 'src/store/store'
+import { alltaskActions } from 'src/store/slices/taskSlice'
+import { AppDispatch, RootState } from 'src/store/store'
+import { addTaskThunk } from 'src/store/thunks/addTaskThunk'
+import { updateTaskThunk } from 'src/store/thunks/updateTaskThunk'
 
 const SubmitForm = memo(() => {
 	const { storageType } = useStorage()
@@ -15,7 +17,7 @@ const SubmitForm = memo(() => {
 	const [valueTask, setValueTask] = useState<string>('')
 	const [valueTime, setValueTime] = useState<string>('')
 	const [valueCategory, setValueCategory] = useState<number | ''>('')
-	const dispatch = useDispatch()
+	const dispatch = useDispatch<AppDispatch>()
 	const { taskForUpdate } = useSelector((state: RootState) => state.alltask)
 
 	useEffect(() => {
@@ -48,12 +50,12 @@ const SubmitForm = memo(() => {
 			else if (select.value === '') setValidate('оберіть категорію')
 			else {
 				dispatch(
-					alltaskActions.addTask({
-						id: Math.floor(Math.random() * 1000000),
-						myTask: textarea.value,
-						dueDate: inputdatatime.value,
-						categoryId: +select.value,
-						isCompleted: false,
+					addTaskThunk({
+						addTask: {
+							task: textarea.value,
+							dateTime: inputdatatime.value,
+							categoryId: +select.value,
+						},
 					}),
 				)
 				clear()
@@ -72,12 +74,13 @@ const SubmitForm = memo(() => {
 			else if (select.value === '') setValidate('оберіть категорію')
 			else if (taskForUpdate) {
 				dispatch(
-					alltaskActions.updateTaskById({
-						id: taskForUpdate.id,
-						myTask: textarea.value,
-						dueDate: inputdatatime.value,
-						categoryId: +select.value,
-						isCompleted: false,
+					updateTaskThunk({
+						updateTask: {
+							id: taskForUpdate.id,
+							task: textarea.value,
+							dateTime: inputdatatime.value,
+							categoryId: +select.value,
+						},
 					}),
 				)
 				clear()
