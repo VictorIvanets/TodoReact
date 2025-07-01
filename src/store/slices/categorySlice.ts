@@ -28,7 +28,7 @@ export const categorySlice = createSlice({
 			state.loading = false
 		})
 		builder.addCase(getCategoryThunk.rejected, (state, action) => {
-			state.errorMessege = action.error.message
+			state.errorMessege = action.payload as string
 			state.loading = false
 		})
 	},

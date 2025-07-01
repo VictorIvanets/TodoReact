@@ -29,7 +29,6 @@ const SubmitForm = memo(() => {
 	}, [taskForUpdate])
 
 	useEffect(() => {
-		console.log('storageType', storageType)
 		clear()
 	}, [storageType])
 
@@ -45,6 +44,7 @@ const SubmitForm = memo(() => {
 			const target = event.target as typeof event.target & NewTaskFormT
 			event.preventDefault()
 			const { inputdatatime, textarea, select } = target
+
 			if (textarea.value === '') setValidate('заповніть поле для задачі')
 			else if (inputdatatime.value === '') setValidate('оберіть дату')
 			else if (select.value === '') setValidate('оберіть категорію')

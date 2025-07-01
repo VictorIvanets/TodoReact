@@ -14,7 +14,15 @@ export const getAllTasks = async () => {
 	).pipe(
 		map((res) => res.allTask),
 		catchError((err) => {
-			return throwError(() => new Error(err.message))
+			let message = 'Unknown error'
+
+			if (err?.response?.errors?.[0]?.message) {
+				message = err.response.errors[0].message
+			} else if (err?.message) {
+				message = err.message
+			}
+
+			return throwError(() => new Error(message))
 		}),
 	)
 	return await firstValueFrom(observable$)

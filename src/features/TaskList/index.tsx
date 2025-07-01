@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { ToDoT } from '../../types/todo.types'
 import TaskCard from '../TaskCard'
 import './tasklist.sass'
@@ -7,7 +8,7 @@ interface TaskListProps {
 	label?: string
 }
 
-const TaskList = ({ data, label }: TaskListProps) => {
+const TaskList = memo(({ data, label }: TaskListProps) => {
 	return (
 		<div className="tasklistwrapper">
 			<h4 className="tasklist__label">{label}</h4>
@@ -16,6 +17,6 @@ const TaskList = ({ data, label }: TaskListProps) => {
 			</div>
 		</div>
 	)
-}
+})
 
 export default TaskList

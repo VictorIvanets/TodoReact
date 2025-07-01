@@ -18,7 +18,17 @@ export const setIsComplited = async (id: number) => {
 		),
 	).pipe(
 		map((res) => res.setIsCompleted),
-		catchError((err) => throwError(() => new Error(err.message))),
+		catchError((err) => {
+			let message = 'Unknown error'
+
+			if (err?.response?.errors?.[0]?.message) {
+				message = err.response.errors[0].message
+			} else if (err?.message) {
+				message = err.message
+			}
+
+			return throwError(() => new Error(message))
+		}),
 	)
 
 	return await firstValueFrom(observable$)

@@ -41,7 +41,7 @@ export const alltaskSlice = createSlice({
 			state.loading = false
 		})
 		builder.addCase(getAllTask.rejected, (state, action) => {
-			state.errorMessege = action.error.message
+			state.errorMessege = action.payload as string
 			state.loading = false
 		})
 		builder.addCase(addTaskThunk.pending, (state) => {
@@ -53,7 +53,7 @@ export const alltaskSlice = createSlice({
 			state.loading = false
 		})
 		builder.addCase(addTaskThunk.rejected, (state, action) => {
-			state.errorMessege = action.error.message
+			state.errorMessege = action.payload as string
 			state.loading = false
 		})
 		builder.addCase(setIsComplitedThunk.pending, (state) => {
@@ -69,7 +69,7 @@ export const alltaskSlice = createSlice({
 			state.loading = false
 		})
 		builder.addCase(setIsComplitedThunk.rejected, (state, action) => {
-			state.errorMessege = action.error.message
+			state.errorMessege = action.payload as string
 			state.loading = false
 		})
 		builder.addCase(deleteTaskThunk.pending, (state) => {
@@ -81,7 +81,8 @@ export const alltaskSlice = createSlice({
 			state.loading = false
 		})
 		builder.addCase(deleteTaskThunk.rejected, (state, action) => {
-			state.errorMessege = action.error.message
+			console.log(action.error)
+			state.errorMessege = action.payload as string
 			state.loading = false
 		})
 		builder.addCase(getOneTaskThunk.pending, (state) => {
@@ -93,7 +94,7 @@ export const alltaskSlice = createSlice({
 			state.loading = false
 		})
 		builder.addCase(getOneTaskThunk.rejected, (state, action) => {
-			state.errorMessege = action.error.message
+			state.errorMessege = action.payload as string
 			state.loading = false
 		})
 		builder.addCase(updateTaskThunk.pending, (state) => {
@@ -108,7 +109,7 @@ export const alltaskSlice = createSlice({
 			state.loading = false
 		})
 		builder.addCase(updateTaskThunk.rejected, (state, action) => {
-			state.errorMessege = action.error.message
+			state.errorMessege = action.payload as string
 			state.loading = false
 		})
 	},
