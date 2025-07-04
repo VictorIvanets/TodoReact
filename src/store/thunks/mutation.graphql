@@ -1,0 +1,3 @@
+mutation SetIsComplited($id: ID!) {
+	setIsCompleted(id: $id)
+}

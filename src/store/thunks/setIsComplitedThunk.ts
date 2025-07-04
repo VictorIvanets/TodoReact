@@ -1,13 +1,20 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { setIsComplited } from 'src/api/setIsComplited/setIsComplited'
+import { gqlClientWithStorage } from 'src/client/gqlClient'
+import { _queries } from './mutation.graphql'
+import parsErrorGQL from 'src/helpers/errorGQL'
 
 export const setIsComplitedThunk = createAsyncThunk<number, { id: number }>(
 	'alltask/setIsComplited',
 	async (input, { rejectWithValue }) => {
 		try {
-			return await setIsComplited(input.id)
+			const data = await gqlClientWithStorage().request<
+				Record<'setIsCompleted', number>
+			>(_queries.SetIsComplited, {
+				id: input.id,
+			})
+			return data.setIsCompleted
 		} catch (err: any) {
-			return rejectWithValue(err.message || 'Failed set is complited')
+			return rejectWithValue(parsErrorGQL(err))
 		}
 	},
 )
