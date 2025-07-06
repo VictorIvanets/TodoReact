@@ -1,5 +1,5 @@
 import { GraphQLClient } from 'graphql-request'
-import { PREFIX_STATIC } from 'src/PREFIXS/prefix'
+import { PREFIX_STATIC } from 'src/api/PREFIXS/prefix'
 
 export const gqlClientWithStorage = () => {
 	const storageType = localStorage.getItem('storageTodo') || 'sql'

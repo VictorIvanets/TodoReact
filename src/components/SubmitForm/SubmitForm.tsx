@@ -8,8 +8,8 @@ import SelectCategory from './components/SelectCategory'
 import { useDispatch, useSelector } from 'react-redux'
 import { alltaskActions } from 'src/store/slices/taskSlice'
 import { AppDispatch, RootState } from 'src/store/store'
-import { addTaskThunk } from 'src/store/thunks/addTaskThunk'
-import { updateTaskThunk } from 'src/store/thunks/updateTaskThunk'
+import { useAddTask } from '../../api/hooks/useAddTask'
+import { useUpdateTask } from '../../api/hooks/useUpdateTask'
 
 const SubmitForm = memo(() => {
 	const { storageType } = useStorage()
@@ -19,6 +19,8 @@ const SubmitForm = memo(() => {
 	const [valueCategory, setValueCategory] = useState<number | ''>('')
 	const dispatch = useDispatch<AppDispatch>()
 	const { taskForUpdate } = useSelector((state: RootState) => state.alltask)
+	const { addOneTask } = useAddTask()
+	const { updateOneTask } = useUpdateTask()
 
 	useEffect(() => {
 		if (taskForUpdate) {
@@ -33,7 +35,7 @@ const SubmitForm = memo(() => {
 	}, [storageType])
 
 	const clear = useCallback(() => {
-		dispatch(alltaskActions.getTaskForUpdateById(null))
+		dispatch(alltaskActions.getTaskForUpdateById())
 		setValueCategory('')
 		setValueTask('')
 		setValueTime('')
@@ -49,19 +51,15 @@ const SubmitForm = memo(() => {
 			else if (inputdatatime.value === '') setValidate('оберіть дату')
 			else if (select.value === '') setValidate('оберіть категорію')
 			else {
-				dispatch(
-					addTaskThunk({
-						addTask: {
-							task: textarea.value,
-							dateTime: inputdatatime.value,
-							categoryId: +select.value,
-						},
-					}),
-				)
+				addOneTask({
+					task: textarea.value,
+					dateTime: inputdatatime.value,
+					categoryId: +select.value,
+				})
 				clear()
 			}
 		},
-		[dispatch, clear],
+		[addOneTask, clear],
 	)
 
 	const update = useCallback(
@@ -73,21 +71,17 @@ const SubmitForm = memo(() => {
 			else if (inputdatatime.value === '') setValidate('оберіть дату')
 			else if (select.value === '') setValidate('оберіть категорію')
 			else if (taskForUpdate) {
-				dispatch(
-					updateTaskThunk({
-						updateTask: {
-							id: taskForUpdate.id,
-							task: textarea.value,
-							dateTime: inputdatatime.value,
-							categoryId: +select.value,
-						},
-					}),
-				)
+				updateOneTask({
+					id: taskForUpdate.id,
+					task: textarea.value,
+					dateTime: inputdatatime.value,
+					categoryId: +select.value,
+				})
 				clear()
 			}
 			return
 		},
-		[taskForUpdate, dispatch, clear],
+		[taskForUpdate, updateOneTask, clear],
 	)
 
 	return (

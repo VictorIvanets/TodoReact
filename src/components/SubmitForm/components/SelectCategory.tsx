@@ -1,9 +1,7 @@
 import { useStorage } from 'src/context/StorageContext'
 import '../submitform.sass'
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, RootState } from 'src/store/store'
 import { useEffect } from 'react'
-import { getCategoryThunk } from 'src/store/thunks/getCategoryThunk'
+import { useGetCategory } from 'src/api/hooks/useGetCategory'
 interface SelectCategoryProps {
 	setValidate: React.Dispatch<React.SetStateAction<string>>
 	setValueCategory: React.Dispatch<React.SetStateAction<number | ''>>
@@ -15,15 +13,11 @@ const SelectCategory = ({
 	setValueCategory,
 	valueCategory,
 }: SelectCategoryProps) => {
-	const { allCategory, loading, errorMessege } = useSelector(
-		(state: RootState) => state.category,
-	)
+	const { category, categoryError, categoryLoading, refetch } = useGetCategory()
 	const { storageType } = useStorage()
-
-	const dispatch = useDispatch<AppDispatch>()
 	useEffect(() => {
-		dispatch(getCategoryThunk())
-	}, [dispatch, storageType])
+		refetch()
+	}, [storageType])
 
 	return (
 		<select
@@ -37,15 +31,15 @@ const SelectCategory = ({
 			value={valueCategory}
 		>
 			<option disabled value="">
-				{loading
+				{categoryLoading
 					? 'loading...'
-					: errorMessege
-					? errorMessege
+					: categoryError
+					? categoryError.message
 					: '--select category--'}
 			</option>
 
-			{allCategory &&
-				allCategory.map((i) => (
+			{category &&
+				category.map((i) => (
 					<option key={i.id} value={i.id}>
 						{i.categoryName}
 					</option>

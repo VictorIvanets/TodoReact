@@ -5,26 +5,27 @@ import { themeColor } from '../../sass/themeColor'
 import { ToDoT } from '../../types/todo.types'
 import { getTimeSpan } from './getTimeSpan'
 import './taskcard.sass'
-import { useDispatch, useSelector } from 'react-redux'
-import { setIsComplitedThunk } from 'src/store/thunks/setIsComplitedThunk'
-import { AppDispatch, RootState } from 'src/store/store'
-import { deleteTaskThunk } from 'src/store/thunks/deleteTaskThunk'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'src/store/store'
 import { getOneTaskThunk } from 'src/store/thunks/getOneTaskThunk'
+import { useSetIsComplited } from 'src/api/hooks/useSetComplite'
+import { useDeleteTask } from 'src/api/hooks/useDeleteTask'
+import { useGetCategory } from 'src/api/hooks/useGetCategory'
 
 interface TaskCardProps {
 	data: ToDoT
 }
 
 const TaskCard = ({ data }: TaskCardProps) => {
-	const { allCategory, errorMessege } = useSelector(
-		(state: RootState) => state.category,
-	)
+	const { category, categoryError } = useGetCategory()
 	const categoryName =
-		allCategory && allCategory.find((i) => i.id === data.categoryId)
+		category && category.find((i) => i.id === data.categoryId)
 	const dispatch = useDispatch<AppDispatch>()
 	const dateIso = new Date(data.dueDate)
 	const [checkDel, setCheckDel] = useState<boolean>(false)
 	const { date, featureBool } = getTimeSpan(data.dueDate)
+	const { setIsComplited } = useSetIsComplited()
+	const { deleteTask } = useDeleteTask()
 
 	return (
 		<Flex
@@ -46,15 +47,14 @@ const TaskCard = ({ data }: TaskCardProps) => {
 						appearence="small"
 						title="delete"
 						onClick={() => {
-							console.log('CARD', data.id)
-							dispatch(deleteTaskThunk({ id: data.id }))
+							deleteTask(data.id)
 							setCheckDel(false)
 						}}
 					/>
 				</Flex>
 			)}
 			<Flex centerV spredV className="taskcard__header">
-				<h4>{!errorMessege && categoryName && categoryName?.categoryName}</h4>
+				<h4>{!categoryError && categoryName && categoryName?.categoryName}</h4>
 				<Flex gap={5}>
 					<Button
 						className="taskcard__bthupdate"
@@ -73,7 +73,7 @@ const TaskCard = ({ data }: TaskCardProps) => {
 
 					<Flex>
 						<button
-							onClick={() => dispatch(setIsComplitedThunk({ id: data.id }))}
+							onClick={() => setIsComplited(data.id)}
 							className="taskcard__checkbox"
 							title="set completed"
 						>
